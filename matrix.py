@@ -5,9 +5,6 @@
 import random
 import math
 
-rozmiar = 8
-
-
 def matrix_generacia(rozmiar):
     matrix = []
     for ii in range(rozmiar):
@@ -36,6 +33,3 @@ def matrix_generacia(rozmiar):
 
 
     return matrix
-m = matrix_generacia(rozmiar)
-for i in range(rozmiar):
-    print(m[i])

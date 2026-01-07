@@ -1,6 +1,6 @@
 from tkinter import *
 from matrix import *
-from logika import *
+from logik import *
 
 a = 8
 matrix = matrix_generacia(8)

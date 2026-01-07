@@ -48,31 +48,3 @@ def check_win(matrix):
     return True # Wszystkie bezpieczne pola są otwarte
 
 
-#   Wizualizacja
-
-def print_field(matrix, reveal_all=False):
-    """Rysuje planszę w konsoli"""
-    size = len(matrix)
-    print("\n    " + " ".join(str(i).ljust(2) for i in range(size)))
-    print("  " + "---" * size)
-
-    for i, row in enumerate(matrix):
-        line = f"{i} |"
-        for cell in row:
-            val, state = cell
-            if reveal_all and val == -1:  # Pokaż wszystkie miny na końcu
-                line += " * "
-            elif state == 0:
-                line += " . "  # Zakryte
-            elif state == 2:
-                line += " F "  # Flaga
-            elif val == -1:
-                line += " * "  # Mina (jeśli odkryta)
-            elif val == 0:
-                line += "   "  # Pustka
-            else:
-                line += f" {val} "  # Cyfra
-        print(line)
-
-m = matrix_generacia(rozmiar)
-print_field(m)

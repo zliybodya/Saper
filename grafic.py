@@ -11,6 +11,7 @@ root.geometry("800x600")
 root.attributes("-fullscreen", False)
 root.title("Saper")
 root.iconbitmap("gameico/icons8-minesweeper-96.ico")
+
 root["bg"] = "#FFFDD0"
 
 flaga = PhotoImage(file="gameico/flaga.png")
@@ -27,19 +28,19 @@ bomba = PhotoImage(file="gameico/bomba.png")
 label = Label(root, text = "Saper", font = ("Arial", 50, "bold"), fg = "#3F3E33", bg = "#FFFDD0")
 label.pack()
 
-canvas = Canvas(root, width = a * 64, height = a * 64, highlightthickness=2, highlightbackground="#B5B08E")
+canvas = Canvas(root, width = a * 64, height = a * 64, highlightbackground="#B5B08E")
 def reg():
     canvas.delete("all")
     for ii in range(a):
         for jj in range(a):
-            canvas.create_rectangle(1 + 64 * ii, 1 + 64 * jj, 1 + 64 * (ii + 1), 1 + 64 * (jj + 1), fill="#FFFDD0", outline="#B5B08E")
-            if matrix[jj][ii][1] == 2:
-                canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=flaga, anchor="nw")
-            if matrix[jj][ii][1] == 1:
+            if matrix[jj][ii][1] == 0 or matrix[jj][ii][1] == 2:
+                canvas.create_rectangle(1 + 64 * ii, 1 + 64 * jj, 1 + 64 * (ii + 1), 1 + 64 * (jj + 1), fill="#FFFDD0", outline="#B5B08E")
+                if matrix[jj][ii][1] == 2:
+                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=flaga, anchor="nw")
+            else:
+                canvas.create_rectangle(1 + 64 * ii, 1 + 64 * jj, 1 + 64 * (ii + 1), 1 + 64 * (jj + 1), fill="#FFF9E6", outline="#B5B08E")
                 if matrix[jj][ii][0] == -1:
                     canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=bomba, anchor="nw")
-                if matrix[jj][ii][0] == 0:
-                    canvas.create_rectangle(1 + 64 * ii, 1 + 64 * jj, 1 + 64 * (ii + 1), 1 + 64 * (jj + 1), fill="#FFF9E6", outline="#B5B08E")
                 if matrix[jj][ii][0] == 1:
                     canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n1, anchor="nw")
                 if matrix[jj][ii][0] == 2:
@@ -58,8 +59,8 @@ def reg():
                     canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n8, anchor="nw")
 def lkm(event):
 
-    x = event.x // 64
-    y = event.y // 64
+    x = (event.x + 1) // 64
+    y = (event.y + 1) // 64
     if not (0 <= x < a and 0 <= y < a):
         return
     open_cell(matrix, y, x)
@@ -67,8 +68,8 @@ def lkm(event):
 
 
 def rkm(event):
-    x = event.x // 64
-    y = event.y // 64
+    x = (event.x + 1) // 64
+    y = (event.y + 1) // 64
     if not (0 <= x < a and 0 <= y < a):
         return
     toggle_flag(matrix, y, x)

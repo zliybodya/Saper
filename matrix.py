@@ -33,3 +33,28 @@ def matrix_generacia(rozmiar):
 
 
     return matrix
+def clear_safe_zone(matrix, r, c):
+    rozmiar = len(matrix)
+    for dx in [-1, 0, 1]:
+        for dy in [-1, 0, 1]:
+            ni = r + dx
+            nj = c + dy
+            if 0 <= ni < rozmiar and 0 <= nj < rozmiar:
+                if matrix[ni][nj][0] == -1:
+                    matrix[ni][nj][0] = 0
+    for i in range(rozmiar):
+        for j in range(rozmiar):
+            if matrix[i][j][0] != -1:
+                matrix[i][j][0] = 0
+    for i in range(rozmiar):
+        for j in range(rozmiar):
+            if matrix[i][j][0] == -1:
+                for dx in [-1, 0, 1]:
+                    for dy in [-1, 0, 1]:
+                        if dx == 0 and dy == 0:
+                            continue
+                        ni = i + dx
+                        nj = j + dy
+                        if 0 <= ni < rozmiar and 0 <= nj < rozmiar:
+                            if matrix[ni][nj][0] != -1:
+                                matrix[ni][nj][0] += 1

@@ -4,6 +4,7 @@ from logik import *
 
 a = 8
 matrix = matrix_generacia(8)
+first_move = True
 
 
 root = Tk()
@@ -59,10 +60,14 @@ def reg():
                     canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n8, anchor="nw")
 def lkm(event):
 
+    global first_move
     x = (event.x + 1) // 64
     y = (event.y + 1) // 64
     if not (0 <= x < a and 0 <= y < a):
         return
+    if first_move:
+        clear_safe_zone(matrix, y, x)
+        first_move = False
     open_cell(matrix, y, x)
     reg()
 

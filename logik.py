@@ -11,22 +11,18 @@ def toggle_flag(matrix, r, c):
 def open_cell(matrix, r, c):
     """Otwiera komórkę. Zwraca False, jeśli trafiono na minę, w przeciwnym razie True"""
 
-    # Sprawdzenie, czy współrzędne mieszczą się w granicach macierzy
     if not (0 <= r < len(matrix) and 0 <= c < len(matrix[0])):
         return True
 
-    # Jeśli komórka jest już otwarta lub oznaczona flagą, nic nie robimy
     if matrix[r][c][1] != 0:
         return True
 
     # Zmieniamy stan na 'otwarta' (stan 1)
     matrix[r][c][1] = 1
 
-    # Jeśli trafiliśmy na minę (wartość -1), kończymy grę
     if matrix[r][c][0] == -1:
         return False
 
-    # Jeśli komórka jest pusta (wartość 0), otwieramy sąsiadów rekurencyjnie
     if matrix[r][c][0] == 0:
         for dx in [-1, 0, 1]:
             for dy in [-1, 0, 1]:
@@ -46,5 +42,40 @@ def check_win(matrix):
             if cell[0] != -1 and cell[1] != 1:
                 return False # Jeszcze nie wygrano
     return True # Wszystkie bezpieczne pola są otwarte
+
+def get_start_settings(level_name):
+    """
+    Określa rozmiar planszy na podstawie wybranego poziomu trudności.
+    """
+    levels = {
+        "łatwy": 4,
+        "średni": 8,
+        "trudny": 16
+    }
+    print(f"Пришло в функцию: '{level_name}'") 
+    size = levels.get(level_name.lower(), 8)
+    print(f"Результат из словаря: {size}")
+    return size
+
+def restart_current_game(current_size):
+    """
+    Logika dla przycisku 'restart' w trakcie gry.
+    Tworzy nową macierz o tym samym rozmiarze.
+    """
+    return matrix_generacia(current_size)
+
+def handle_end_game(user_choice, current_size):
+    """
+    Obsługuje wybór gracza po wygranej lub przegranej.
+    """
+    if user_choice == "Kontynuuj":
+        return matrix_generacia(current_size), current_size
+    
+    elif user_choice == "Zmien trudnosc":
+        return "ZMIEN_POZIOM", None
+        
+    elif user_choice== "Wyjdz":
+        return "WYJDZ", None
+
 
 

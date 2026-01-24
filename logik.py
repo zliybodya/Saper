@@ -57,9 +57,9 @@ def get_start_settings(level_name):
     Określa rozmiar planszy na podstawie wybranego poziomu trudności.
     """
     levels = {
-        "Łatwy": 4,
-        "Średni": 8,
-        "Trudny": 16
+        "łatwy": 4,
+        "średni": 8,
+        "trudny": 16
     }
     size = levels.get(level_name.lower(), 8)
     return size
@@ -83,6 +83,7 @@ def handle_end_game(user_choice, current_size):
         
     elif user_choice== "Wyjdz":
         return "WYJDZ", None
+
 
 
 

@@ -6,6 +6,7 @@ a = 8
 matrix = matrix_generacia(8)
 first_move = True
 
+winche = False
 
 root = Tk()
 root.geometry("800x600")
@@ -29,8 +30,28 @@ bomba = PhotoImage(file="gameico/bomba.png")
 label = Label(root, text = "Saper", font = ("Arial", 50, "bold"), fg = "#3F3E33", bg = "#FFFDD0")
 label.pack()
 
-canvas = Canvas(root, width = a * 64, height = a * 64, highlightbackground="#B5B08E")
+win = Label(
+    root,
+    text="Wygrałeś!",
+    font=("Arial", 32, "bold"),
+    fg="#3F3E33",
+    bg="#FFFDD0",
+    bd=4,
+    relief="solid"
+)
+prz = Label(
+    root,
+    text="Przegrałeś!",
+    font=("Arial", 32, "bold"),
+    fg="#3F3E33",
+    bg="#FFFDD0",
+    bd=4,
+    relief="solid"
+)
+
 def reg():
+
+
     canvas.delete("all")
     # Słownik mapujący wartości z macierzy na zmienne z obrazkami.
     # Zakładam, że zmienne n1, n2, flaga, bomba itd. są już zdefiniowane globalnie.
@@ -42,6 +63,8 @@ def reg():
     
     CELL_SIZE = 64
     OFFSET = 1
+
+
 
     for col in range(a):      
         for row in range(a):  
@@ -69,8 +92,18 @@ def reg():
 
             if image_to_draw:
                 canvas.create_image(x_pos, y_pos, image=image_to_draw, anchor="nw")
-def lkm(event):
+    global winche
 
+    if check_win(matrix):
+        win.lift()
+        winche = True
+
+        win.place(relx=0.5, rely=0.5, anchor="center")
+
+def lkm(event):
+    global winche
+    if winche:
+        return
     global first_move
     x = (event.x + 1) // 64
     y = (event.y + 1) // 64
@@ -79,6 +112,11 @@ def lkm(event):
     if first_move:
         clear_safe_zone(matrix, y, x)
         first_move = False
+    if matrix[y][x][0] == -1:
+
+        winche = True
+        prz.lift()
+        prz.place(relx=0.5, rely=0.5, anchor="center")
     open_cell(matrix, y, x)
     reg()
 
@@ -92,6 +130,10 @@ def rkm(event):
     reg()
 
 def set_level(level_name):
+    global winche
+    winche = False
+    win.place_forget()
+    prz.place_forget()
     global a, matrix, CELL_SIZE
     a = get_start_settings(level_name)
     matrix = matrix_generacia(a)
@@ -107,6 +149,7 @@ def set_level(level_name):
     root.geometry("")
     reg()
 
+
 menubar=Menu(root)
 
 main_frame = Frame(root, bg="#B5B08E")
@@ -114,7 +157,7 @@ main_frame.pack(expand=True)
 left_frame = Frame(main_frame, bg="#B5B08E")
 left_frame.pack(side="left")
 
-canvas = Canvas(left_frame, width=a * 64, height=a * 64, highlightbackground="#B5B08E")
+canvas = Canvas(left_frame, width=a * 64, height=a * 64, bg="#FFFDD0", highlightbackground="#B5B08E")
 canvas.pack()
 
 right_frame = Frame(main_frame, bg="#B5B08E")
@@ -130,9 +173,6 @@ canvas.bind("<Button-1>", lkm)
 canvas.bind("<Button-3>", rkm)
 
 reg()
-
-
-canvas.pack()
 
 
 

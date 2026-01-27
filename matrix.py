@@ -35,6 +35,8 @@ def matrix_generacia(rozmiar):
     return matrix
 def clear_safe_zone(matrix, r, c):
     rozmiar = len(matrix)
+    # Liczymy i usuwamy miny z kwadratu 3x3
+    bomb_count = 0
     for dx in [-1, 0, 1]:
         for dy in [-1, 0, 1]:
             ni = r + dx
@@ -42,6 +44,26 @@ def clear_safe_zone(matrix, r, c):
             if 0 <= ni < rozmiar and 0 <= nj < rozmiar:
                 if matrix[ni][nj][0] == -1:
                     matrix[ni][nj][0] = 0
+                    bomb_count = bomb_count + 1
+    
+    # Umieszczamy znalezione miny w innych miejscach
+    placed = 0
+    while placed < bomb_count:
+        a = random.randint(0, rozmiar - 1)
+        b = random.randint(0, rozmiar - 1)
+        is_in_safe_zone = False
+        for dx in [-1, 0, 1]:
+            for dy in [-1, 0, 1]:
+                if a == r + dx and b == c + dy:
+                    is_in_safe_zone = True
+                    break
+            if is_in_safe_zone:
+                break
+        
+        if not is_in_safe_zone and matrix[a][b][0] != -1:
+            matrix[a][b][0] = -1
+            placed = placed + 1
+    
     for i in range(rozmiar):
         for j in range(rozmiar):
             if matrix[i][j][0] != -1:

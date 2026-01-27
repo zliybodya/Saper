@@ -3,6 +3,7 @@ from matrix import *
 from logik import *
 
 a = 8
+cell_size = 64
 matrix = matrix_generacia(8)
 first_move = True
 
@@ -15,65 +16,80 @@ root.iconbitmap("gameico/icons8-minesweeper-96.ico")
 
 root["bg"] = "#FFFDD0"
 
-flaga = PhotoImage(file="gameico/flaga.png")
-n1 = PhotoImage(file="gameico/1.png")
-n2 = PhotoImage(file="gameico/2.png")
-n3 = PhotoImage(file="gameico/3.png")
-n4 = PhotoImage(file="gameico/4.png")
-n5 = PhotoImage(file="gameico/5.png")
-n6 = PhotoImage(file="gameico/6.png")
-n7 = PhotoImage(file="gameico/7.png")
-n8 = PhotoImage(file="gameico/8.png")
-bomba = PhotoImage(file="gameico/bomba.png")
+# Загружаем оригинальные картинки (64x64)
+flaga_orig = PhotoImage(file="gameico/flaga.png")
+n1_orig = PhotoImage(file="gameico/1.png")
+n2_orig = PhotoImage(file="gameico/2.png")
+n3_orig = PhotoImage(file="gameico/3.png")
+n4_orig = PhotoImage(file="gameico/4.png")
+n5_orig = PhotoImage(file="gameico/5.png")
+n6_orig = PhotoImage(file="gameico/6.png")
+n7_orig = PhotoImage(file="gameico/7.png")
+n8_orig = PhotoImage(file="gameico/8.png")
+bomba_orig = PhotoImage(file="gameico/bomba.png")
+
+def scale_image(img, size):
+    if size == 64:
+        return img
+    elif size == 32:
+        return img.subsample(2, 2)
+    elif size == 48:
+        return img.zoom(3, 3).subsample(4, 4)
+    else:
+        return img
+
+def update_images(size):
+    global flaga, n1, n2, n3, n4, n5, n6, n7, n8, bomba
+    flaga = scale_image(flaga_orig, size)
+    n1 = scale_image(n1_orig, size)
+    n2 = scale_image(n2_orig, size)
+    n3 = scale_image(n3_orig, size)
+    n4 = scale_image(n4_orig, size)
+    n5 = scale_image(n5_orig, size)
+    n6 = scale_image(n6_orig, size)
+    n7 = scale_image(n7_orig, size)
+    n8 = scale_image(n8_orig, size)
+    bomba = scale_image(bomba_orig, size)
+
+update_images(cell_size)
 
 label = Label(root, text = "Saper", font = ("Arial", 50, "bold"), fg = "#3F3E33", bg = "#FFFDD0")
 label.pack()
 
-canvas = Canvas(root, width = a * 64, height = a * 64, highlightbackground="#B5B08E")
+canvas = Canvas(root, width = a * cell_size, height = a * cell_size, highlightbackground="#B5B08E")
 def reg():
     canvas.delete("all")
-    # Słownik mapujący wartości z macierzy na zmienne z obrazkami.
-    # Zakładam, że zmienne n1, n2, flaga, bomba itd. są już zdefiniowane globalnie.
-    images_map = {
-        -1: bomba,
-        1: n1, 2: n2, 3: n3, 4: n4,
-        5: n5, 6: n6, 7: n7, 8: n8
-    }
-    
-    CELL_SIZE = 64
-    OFFSET = 1
-
-    for col in range(a):      
-        for row in range(a):  
-            
-            cell_content = matrix[row][col][0] # Wartość: -1 (bomba), 0 (puste), 1-8 (liczby)
-            cell_state = matrix[row][col][1]   # Stan: 0 (zakryte), 1 (odkryte), 2 (flaga)
-            
-            x_pos = OFFSET + CELL_SIZE * col
-            y_pos = OFFSET + CELL_SIZE * row
-            fill_color = "#FFF9E6" 
-            image_to_draw = None   
-
-            if cell_state == 0 or cell_state == 2: # Zakryta lub flaga
-                fill_color = "#FFFDD0"
-                if cell_state == 2:
-                    image_to_draw = flaga
-            else: # Komórka odkryta (cell_state == 1)
-                image_to_draw = images_map.get(cell_content)
-
-            canvas.create_rectangle(
-                x_pos, y_pos, 
-                x_pos + CELL_SIZE, y_pos + CELL_SIZE, 
-                fill=fill_color, outline="#B5B08E"
-            )
-
-            if image_to_draw:
-                canvas.create_image(x_pos, y_pos, image=image_to_draw, anchor="nw")
+    for ii in range(a):
+        for jj in range(a):
+            if matrix[jj][ii][1] == 0 or matrix[jj][ii][1] == 2:
+                canvas.create_rectangle(1 + cell_size * ii, 1 + cell_size * jj, 1 + cell_size * (ii + 1), 1 + cell_size * (jj + 1), fill="#FFFDD0", outline="#B5B08E")
+                if matrix[jj][ii][1] == 2:
+                    canvas.create_image(1 + cell_size * ii, 1 + cell_size * jj, image=flaga, anchor="nw")
+            else:
+                canvas.create_rectangle(1 + cell_size * ii, 1 + cell_size * jj, 1 + cell_size * (ii + 1), 1 + cell_size * (jj + 1), fill="#FFF9E6", outline="#B5B08E")
+                if matrix[jj][ii][0] == -1:
+                    canvas.create_image(1 + cell_size * ii, 1 + cell_size * jj, image=bomba, anchor="nw")
+                if matrix[jj][ii][0] == 1:
+                    canvas.create_image(1 + cell_size * ii, 1 + cell_size * jj, image=n1, anchor="nw")
+                if matrix[jj][ii][0] == 2:
+                    canvas.create_image(1 + cell_size * ii, 1 + cell_size * jj, image=n2, anchor="nw")
+                if matrix[jj][ii][0] == 3:
+                    canvas.create_image(1 + cell_size * ii, 1 + cell_size * jj, image=n3, anchor="nw")
+                if matrix[jj][ii][0] == 4:
+                    canvas.create_image(1 + cell_size * ii, 1 + cell_size * jj, image=n4, anchor="nw")
+                if matrix[jj][ii][0] == 5:
+                    canvas.create_image(1 + cell_size * ii, 1 + cell_size * jj, image=n5, anchor="nw")
+                if matrix[jj][ii][0] == 6:
+                    canvas.create_image(1 + cell_size * ii, 1 + cell_size * jj, image=n6, anchor="nw")
+                if matrix[jj][ii][0] == 7:
+                    canvas.create_image(1 + cell_size * ii, 1 + cell_size * jj, image=n7, anchor="nw")
+                if matrix[jj][ii][0] == 8:
+                    canvas.create_image(1 + cell_size * ii, 1 + cell_size * jj, image=n8, anchor="nw")
 def lkm(event):
 
     global first_move
-    x = (event.x + 1) // 64
-    y = (event.y + 1) // 64
+    x = (event.x + 1) // cell_size
+    y = (event.y + 1) // cell_size
     if not (0 <= x < a and 0 <= y < a):
         return
     if first_move:
@@ -84,48 +100,12 @@ def lkm(event):
 
 
 def rkm(event):
-    x = (event.x + 1) // 64
-    y = (event.y + 1) // 64
+    x = (event.x + 1) // cell_size
+    y = (event.y + 1) // cell_size
     if not (0 <= x < a and 0 <= y < a):
         return
     toggle_flag(matrix, y, x)
     reg()
-
-def set_level(level_name):
-    global a, matrix, CELL_SIZE
-    a = get_start_settings(level_name)
-    matrix = matrix_generacia(a)
-
-    if a > 10:
-        CELL_SIZE = 40  
-    else:
-        CELL_SIZE = 64
-        
-    new_size = a * CELL_SIZE
-    canvas.config(width=new_size, height=new_size)
-    root.update_idletasks()
-    root.geometry("")
-    reg()
-
-menubar=Menu(root)
-
-main_frame = Frame(root, bg="#B5B08E")
-main_frame.pack(expand=True)
-left_frame = Frame(main_frame, bg="#B5B08E")
-left_frame.pack(side="left")
-
-canvas = Canvas(left_frame, width=a * 64, height=a * 64, highlightbackground="#B5B08E")
-canvas.pack()
-
-right_frame = Frame(main_frame, bg="#B5B08E")
-right_frame.pack(side="right", fill="y", padx=5 )
-
-
-Label(right_frame, text="Levels:", font=("Arial", 10, "bold"), bg="#F4F4F3").pack()
-Button(right_frame, text="Łatwy", command=lambda: set_level("łatwy")).pack(pady=2, fill="x")
-Button(right_frame, text="Średni", command=lambda: set_level("średni")).pack(pady=2, fill="x")
-Button(right_frame, text="Trudny", command=lambda: set_level("trudny")).pack(pady=2, fill="x")
-
 
 canvas.bind("<Button-1>", lkm)
 canvas.bind("<Button-3>", rkm)

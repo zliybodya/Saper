@@ -32,32 +32,43 @@ label.pack()
 canvas = Canvas(root, width = a * 64, height = a * 64, highlightbackground="#B5B08E")
 def reg():
     canvas.delete("all")
-    for ii in range(a):
-        for jj in range(a):
-            if matrix[jj][ii][1] == 0 or matrix[jj][ii][1] == 2:
-                canvas.create_rectangle(1 + 64 * ii, 1 + 64 * jj, 1 + 64 * (ii + 1), 1 + 64 * (jj + 1), fill="#FFFDD0", outline="#B5B08E")
-                if matrix[jj][ii][1] == 2:
-                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=flaga, anchor="nw")
-            else:
-                canvas.create_rectangle(1 + 64 * ii, 1 + 64 * jj, 1 + 64 * (ii + 1), 1 + 64 * (jj + 1), fill="#FFF9E6", outline="#B5B08E")
-                if matrix[jj][ii][0] == -1:
-                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=bomba, anchor="nw")
-                if matrix[jj][ii][0] == 1:
-                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n1, anchor="nw")
-                if matrix[jj][ii][0] == 2:
-                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n2, anchor="nw")
-                if matrix[jj][ii][0] == 3:
-                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n3, anchor="nw")
-                if matrix[jj][ii][0] == 4:
-                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n4, anchor="nw")
-                if matrix[jj][ii][0] == 5:
-                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n5, anchor="nw")
-                if matrix[jj][ii][0] == 6:
-                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n6, anchor="nw")
-                if matrix[jj][ii][0] == 7:
-                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n7, anchor="nw")
-                if matrix[jj][ii][0] == 8:
-                    canvas.create_image(1 + 64 * ii, 1 + 64 * jj, image=n8, anchor="nw")
+    # Słownik mapujący wartości z macierzy na zmienne z obrazkami.
+    # Zakładam, że zmienne n1, n2, flaga, bomba itd. są już zdefiniowane globalnie.
+    images_map = {
+        -1: bomba,
+        1: n1, 2: n2, 3: n3, 4: n4,
+        5: n5, 6: n6, 7: n7, 8: n8
+    }
+    
+    CELL_SIZE = 64
+    OFFSET = 1
+
+    for col in range(a):      
+        for row in range(a):  
+            
+            cell_content = matrix[row][col][0] # Wartość: -1 (bomba), 0 (puste), 1-8 (liczby)
+            cell_state = matrix[row][col][1]   # Stan: 0 (zakryte), 1 (odkryte), 2 (flaga)
+            
+            x_pos = OFFSET + CELL_SIZE * col
+            y_pos = OFFSET + CELL_SIZE * row
+            fill_color = "#FFF9E6" 
+            image_to_draw = None   
+
+            if cell_state == 0 or cell_state == 2: # Zakryta lub flaga
+                fill_color = "#FFFDD0"
+                if cell_state == 2:
+                    image_to_draw = flaga
+            else: # Komórka odkryta (cell_state == 1)
+                image_to_draw = images_map.get(cell_content)
+
+            canvas.create_rectangle(
+                x_pos, y_pos, 
+                x_pos + CELL_SIZE, y_pos + CELL_SIZE, 
+                fill=fill_color, outline="#B5B08E"
+            )
+
+            if image_to_draw:
+                canvas.create_image(x_pos, y_pos, image=image_to_draw, anchor="nw")
 def lkm(event):
 
     global first_move
@@ -79,6 +90,42 @@ def rkm(event):
         return
     toggle_flag(matrix, y, x)
     reg()
+
+def set_level(level_name):
+    global a, matrix, CELL_SIZE
+    a = get_start_settings(level_name)
+    matrix = matrix_generacia(a)
+
+    if a > 10:
+        CELL_SIZE = 40  
+    else:
+        CELL_SIZE = 64
+        
+    new_size = a * CELL_SIZE
+    canvas.config(width=new_size, height=new_size)
+    root.update_idletasks()
+    root.geometry("")
+    reg()
+
+menubar=Menu(root)
+
+main_frame = Frame(root, bg="#B5B08E")
+main_frame.pack(expand=True)
+left_frame = Frame(main_frame, bg="#B5B08E")
+left_frame.pack(side="left")
+
+canvas = Canvas(left_frame, width=a * 64, height=a * 64, highlightbackground="#B5B08E")
+canvas.pack()
+
+right_frame = Frame(main_frame, bg="#B5B08E")
+right_frame.pack(side="right", fill="y", padx=5 )
+
+
+Label(right_frame, text="Levels:", font=("Arial", 10, "bold"), bg="#F4F4F3").pack()
+Button(right_frame, text="Łatwy", command=lambda: set_level("łatwy")).pack(pady=2, fill="x")
+Button(right_frame, text="Średni", command=lambda: set_level("średni")).pack(pady=2, fill="x")
+Button(right_frame, text="Trudny", command=lambda: set_level("trudny")).pack(pady=2, fill="x")
+
 
 canvas.bind("<Button-1>", lkm)
 canvas.bind("<Button-3>", rkm)

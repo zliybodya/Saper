@@ -122,6 +122,9 @@ def lkm(event):
 
 
 def rkm(event):
+    global winche
+    if winche:
+        return
     x = (event.x + 1) // 64
     y = (event.y + 1) // 64
     if not (0 <= x < a and 0 <= y < a):

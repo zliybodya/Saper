@@ -16,7 +16,6 @@ root.iconbitmap("gameico/icons8-minesweeper-96.ico")
 
 root["bg"] = "#FFFDD0"
 
-# Загружаем оригинальные картинки (64x64)
 flaga_orig = PhotoImage(file="gameico/flaga.png")
 n1_orig = PhotoImage(file="gameico/1.png")
 n2_orig = PhotoImage(file="gameico/2.png")

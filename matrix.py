@@ -1,11 +1,12 @@
 #m[wiersz][kolumna][stan, otwarta czy flaga czy nie otwarta]
 #stan -1 = bomba; [1; 8] = liczba bomb obok
 
-
 import random
 import math
 
-def matrix_generacia(rozmiar):
+
+def matrix_generacia(rozmiar, r_first=None, c_first=None):
+
     matrix = []
     for ii in range(rozmiar):
         a = []
@@ -13,12 +14,18 @@ def matrix_generacia(rozmiar):
             b = [0, 0]
             a.append(b)
         matrix.append(a)
+
+    if r_first is None or c_first is None:
+        return matrix
+
     liczba_bomb = math.floor(rozmiar * rozmiar * 0.2)
+
     h = 0
     while h < liczba_bomb:
         a = random.randint(0, rozmiar - 1)
         b = random.randint(0, rozmiar - 1)
-        if matrix[a][b][0] != -1:
+        is_safe_zone = abs(a - r_first) <= 1 and abs(b - c_first) <= 1
+        if matrix[a][b][0] != -1 and not is_safe_zone:
             matrix[a][b][0] = -1
             for dx in [-1, 0, 1]:
                 for dy in [-1, 0, 1]:
@@ -29,32 +36,6 @@ def matrix_generacia(rozmiar):
                     if 0 <= ni < rozmiar and 0 <= nj < rozmiar:
                         if matrix[ni][nj][0] != -1:
                             matrix[ni][nj][0] += 1
-            h = h +1
-
+            h += 1
 
     return matrix
-def clear_safe_zone(matrix, r, c):
-    rozmiar = len(matrix)
-    for dx in [-1, 0, 1]:
-        for dy in [-1, 0, 1]:
-            ni = r + dx
-            nj = c + dy
-            if 0 <= ni < rozmiar and 0 <= nj < rozmiar:
-                if matrix[ni][nj][0] == -1:
-                    matrix[ni][nj][0] = 0
-    for i in range(rozmiar):
-        for j in range(rozmiar):
-            if matrix[i][j][0] != -1:
-                matrix[i][j][0] = 0
-    for i in range(rozmiar):
-        for j in range(rozmiar):
-            if matrix[i][j][0] == -1:
-                for dx in [-1, 0, 1]:
-                    for dy in [-1, 0, 1]:
-                        if dx == 0 and dy == 0:
-                            continue
-                        ni = i + dx
-                        nj = j + dy
-                        if 0 <= ni < rozmiar and 0 <= nj < rozmiar:
-                            if matrix[ni][nj][0] != -1:
-                                matrix[ni][nj][0] += 1

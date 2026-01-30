@@ -43,15 +43,6 @@ def check_win(matrix):
                 return False # Jeszcze nie wygrano
     return True # Wszystkie bezpieczne pola są otwarte
 
-def check_win(matrix):
-    """Sprawdza, czy gracz odkrył wszystkie bezpieczne pola"""
-    for row in matrix:
-        for cell in row:
-            # Jeśli pole NIE jest miną, a nadal jest zamknięte (0) lub ma flagę (2)
-            if cell[0] != -1 and cell[1] != 1:
-                return False 
-    return True 
-
 def get_start_settings(level_name):
     """
     Określa rozmiar planszy na podstawie wybranego poziomu trudności.
@@ -64,12 +55,7 @@ def get_start_settings(level_name):
     size = levels.get(level_name.lower(), 8)
     return size
 
-def restart_current_game(current_size):
-    """
-    Logika dla przycisku 'restart' w trakcie gry.
-    Tworzy nową macierz o tym samym rozmiarze.
-    """
-    return matrix_generacia(current_size)
+
 
 def handle_end_game(user_choice, current_size):
     """

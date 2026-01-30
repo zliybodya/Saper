@@ -100,20 +100,19 @@ def reg():
 
         win.place(relx=0.5, rely=0.5, anchor="center")
 
+
 def lkm(event):
-    global winche
+    global winche, first_move, matrix
     if winche:
         return
-    global first_move
     x = (event.x + 1) // 64
     y = (event.y + 1) // 64
     if not (0 <= x < a and 0 <= y < a):
         return
     if first_move:
-        clear_safe_zone(matrix, y, x)
+        matrix = matrix_generacia(a, y, x)
         first_move = False
     if matrix[y][x][0] == -1:
-
         winche = True
         prz.lift()
         prz.place(relx=0.5, rely=0.5, anchor="center")
@@ -132,20 +131,19 @@ def rkm(event):
     toggle_flag(matrix, y, x)
     reg()
 
+
 def set_level(level_name):
-    global winche
+    global winche, first_move, a, matrix, CELL_SIZE
     winche = False
+    first_move = True
     win.place_forget()
     prz.place_forget()
-    global a, matrix, CELL_SIZE
     a = get_start_settings(level_name)
     matrix = matrix_generacia(a)
-
     if a > 10:
-        CELL_SIZE = 40  # Для уровня 16x16 клетки будут поменьше
+        CELL_SIZE = 40
     else:
         CELL_SIZE = 64
-        
     new_size = a * CELL_SIZE
     canvas.config(width=new_size, height=new_size)
     root.update_idletasks()

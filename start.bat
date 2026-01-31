@@ -1,19 +1,25 @@
 @echo off
-chcp 65001 > nul
-echo Uruchamianie projektu
-
-if not exist venv (
-    echo Brak srodowiska wirtualnego (venv).
-    echo Najpierw uruchom plik konfiguracyjny.
+REM Sprawdzenie, czy wirtualne srodowisko istnieje
+if not exist venv\Scripts\activate.bat (
+    echo Wirtualne srodowisko venv nie istnieje.
+    echo Najpierw uruchom setup_venv.bat
     pause
     exit /b
 )
 
-echo Aktywacja srodowiska wirtualnego...
+REM Aktywacja wirtualnego srodowiska
 call venv\Scripts\activate
 
-echo Uruchamianie pliku grafic.py...
+REM Sprawdzenie, czy plik grafic.py istnieje
+if not exist grafic.py (
+    echo Plik grafic.py nie zostal znaleziony!
+    pause
+    exit /b
+)
+
+REM Uruchomienie skryptu Python
 python grafic.py
 
-echo Zakonczono dzialanie programu.
 pause
+
+

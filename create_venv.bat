@@ -1,30 +1,33 @@
 @echo off
-chcp 65001 > nul
-echo Konfiguracja środowiska projektu
-
-set /p choice="Czy chcesz utworzyć środowisko wirtualne (venv) i zainstalować pakiety? (y/n): "
-
-if /i "%choice%"=="y" (
-
-    if not exist venv (
-        echo Tworzenie venv...
-        python -m venv venv
-    ) else (
-        echo venv już istnieje
-    )
-
-    call venv\Scripts\activate
-
-    if exist import_lib.txt (
-        pip install -r import_lib.txt
-    ) else (
-        echo Brak pliku import_lib.txt
-    )
-
-    echo Gotowe!
+REM Sprawdzenie, czy Python jest zainstalowany
+python --version >nul 2>&1
+if errorlevel 1 (
+    echo Python nie zostal znaleziony. Zainstaluj Pythona i dodaj go do PATH.
     pause
-) else (
-    echo Przerwano konfigurację.
-    pause
+    exit /b
 )
 
+REM Tworzenie wirtualnego srodowiska
+if not exist venv (
+    echo Tworzenie wirtualnego srodowiska...
+    python -m venv venv
+) else (
+    echo Wirtualne srodowisko venv juz istnieje.
+)
+
+REM Aktywacja wirtualnego srodowiska
+call venv\Scripts\activate
+
+REM Aktualizacja pip
+python -m pip install --upgrade pip
+
+REM Instalacja bibliotek z pliku import_lib.txt
+if exist import_lib.txt (
+    pip install -r import_lib.txt
+) else (
+    echo Plik import_lib.txt nie zostal znaleziony!
+)
+
+echo.
+echo Gotowe ✅
+pause

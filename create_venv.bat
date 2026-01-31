@@ -29,5 +29,5 @@ if exist import_lib.txt (
 )
 
 echo.
-echo Gotowe ✅
+echo Gotowe
 pause

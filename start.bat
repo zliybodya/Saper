@@ -1,13 +1,19 @@
 @echo off
-cls
+chcp 65001 > nul
+echo Uruchamianie projektu
 
-python --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo Błąd nie masz pythona
+if not exist venv (
+    echo Brak srodowiska wirtualnego (venv).
+    echo Najpierw uruchom plik konfiguracyjny.
     pause
-    exit
+    exit /b
 )
 
-start "" pythonw grafic.py
+echo Aktywacja srodowiska wirtualnego...
+call venv\Scripts\activate
 
-exit
+echo Uruchamianie pliku grafic.py...
+python grafic.py
+
+echo Zakonczono dzialanie programu.
+pause

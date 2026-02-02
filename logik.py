@@ -51,10 +51,8 @@ def get_start_settings(level_name):
         "łatwy": 4,
         "średni": 8,
         "trudny": 16
-    }
-    print(f"Пришло в функцию: '{level_name}'") 
+    } 
     size = levels.get(level_name.lower(), 8)
-    print(f"Результат из словаря: {size}")
     return size
 
 def restart_current_game(current_size):
@@ -76,6 +74,7 @@ def handle_end_game(user_choice, current_size):
         
     elif user_choice== "Wyjdz":
         return "WYJDZ", None
+
 
 
 

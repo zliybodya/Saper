@@ -55,6 +55,14 @@ def get_start_settings(level_name):
     size = levels.get(level_name.lower(), 8)
     return size
 
+def restart_current_game(current_size):
+    """
+    Logika dla przycisku 'restart' w trakcie gry.
+    Tworzy nową macierz o tym samym rozmiarze.
+    """
+    from matrix import matrix_generacia
+    return matrix_generacia(current_size)
+
 
 
 def handle_end_game(user_choice, current_size):
@@ -69,6 +77,7 @@ def handle_end_game(user_choice, current_size):
         
     elif user_choice== "Wyjdz":
         return "WYJDZ", None
+
 
 
 

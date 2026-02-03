@@ -30,8 +30,4 @@ if exist import_lib.txt (
 
 echo.
 echo Gotowe
-echo Choose the difficulty level and write: easy, medium, hard
-pause
-set /p level=
-python grafic.py %level%
 pause

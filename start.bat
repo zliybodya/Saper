@@ -18,8 +18,11 @@ if not exist grafic.py (
 )
 
 REM Uruchomienie skryptu Python
-python grafic.py
+REM python grafic.py
 
+echo Choose the difficulty level and write: easy, medium, hard
+set /p level=
+python grafic.py %level%
 pause
 
 

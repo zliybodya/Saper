@@ -50,7 +50,8 @@ def get_start_settings(level_name):
     levels = {
         "łatwy": 4,
         "średni": 8,
-        "trudny": 16
+        "trudny": 10
+        
     }
     size = levels.get(level_name.lower(), 8)
     return size

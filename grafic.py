@@ -1,6 +1,7 @@
 from tkinter import *
 from matrix import *
 from logik import *
+import sys
 
 a = 8
 matrix = matrix_generacia(8)
@@ -160,6 +161,15 @@ left_frame.pack(side="left")
 
 canvas = Canvas(left_frame, width=a * 64, height=a * 64, bg="#FFFDD0", highlightbackground="#B5B08E")
 canvas.pack()
+
+if len(sys.argv) > 1:
+    level = sys.argv[1].lower()
+    if level == 'easy':
+        set_level('łatwy')
+    elif level == 'medium':
+        set_level('średni')
+    elif level == 'hard':
+        set_level('trudny')
 
 right_frame = Frame(main_frame, bg="#B5B08E")
 right_frame.pack(side="right", fill="y", padx=5 )
